@@ -1,7 +1,8 @@
 name: Just Upload Task Manager App
 on:
   push:
-    - main
+    branches:
+      - main
 
 jobs:
   deployLaravel:
