@@ -9,6 +9,8 @@ jobs:
     name: Deploying Laravel to CPanel
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout of Branch
+        uses: actions/checkout@v2.3.2
       - name: Create .env
         run: |
           touch .env
