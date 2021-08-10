@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Create .env
-        runs: |
+        run: |
           touch .env
           echo APP_NAME='Task Manager' >> .env
           echo DB_CONNECTION=mysql >> .env        
