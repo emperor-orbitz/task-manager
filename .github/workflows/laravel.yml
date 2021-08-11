@@ -1,32 +1,32 @@
-name: Just Upload Task Manager App
-on:
-  push:
-    branches:
-      - main
+# name: Just Upload Task Manager App
+# on:
+#   push:
+#     branches:
+#       - main
 
-jobs:
-  deployLaravel:
-    name: Deploying Laravel to CPanel
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout of Branch
-        uses: actions/checkout@v2.3.2
-      - name: Create .env
-        run: |
-          touch .env
-          echo APP_NAME='Task Manager' >> .env
-          echo DB_CONNECTION=mysql >> .env        
-          echo DB_HOST=augustinecorporations.com >> .env
-          echo DB_PORT=3306 >> .env
-          echo DB_DATABASE=augustinecorpora_task_manager >> .env
-          echo APP_DEBUG=false >> .env
-          echo DB_USERNAME=augustinecorpora_devmalik >> .env
-          echo DB_PASSWORD=malik123!@# >> .env
+# jobs:
+#   deployLaravel:
+#     name: Deploying Laravel to CPanel
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: Checkout of Branch
+#         uses: actions/checkout@v2.3.2
+#       - name: Create .env
+#         run: |
+#           touch .env
+#           echo APP_NAME='Task Manager' >> .env
+#           echo DB_CONNECTION=mysql >> .env        
+#           echo DB_HOST=augustinecorporations.com >> .env
+#           echo DB_PORT=3306 >> .env
+#           echo DB_DATABASE=augustinecorpora_task_manager >> .env
+#           echo APP_DEBUG=false >> .env
+#           echo DB_USERNAME=augustinecorpora_devmalik >> .env
+#           echo DB_PASSWORD=malik123!@# >> .env
 
-      - name: Deploy to CPanel
-        uses: SamKirkland/FTP-Deploy-Action@4.0.0
-        with:
-          server: ${{ secrets.FTP_SERVER }}
-          username: ${{ secrets.FTP_USERNAME }}
-          password: ${{ secrets.FTP_PASSWORD }}
+#       - name: Deploy to CPanel
+#         uses: SamKirkland/FTP-Deploy-Action@4.0.0
+#         with:
+#           server: ${{ secrets.FTP_SERVER }}
+#           username: ${{ secrets.FTP_USERNAME }}
+#           password: ${{ secrets.FTP_PASSWORD }}
 
