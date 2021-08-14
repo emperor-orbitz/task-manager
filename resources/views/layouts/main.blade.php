@@ -7,6 +7,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <!-- Fonts -->
   <link rel="stylesheet" type="text/css" href="{{ asset('css/semantic.min.css') }}">
+
   <link rel="stylesheet" type="text/css" href="{{ asset('css/styles.css') }}">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>

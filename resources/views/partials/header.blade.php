@@ -13,7 +13,7 @@
         <!-- <div class="item">Departments</div> -->
         <div class="item"><a href="{{route('admin.user')}}">Create User</a></div>
         <div class="item"><a href="{{route('admin.task.create')}}">Create Task</a></div>
-
+        <div class="item"><a href="{{route('admin.department.create')}}">Create Department</a></div>
         <div class="item" style="color: red !important;"> <a href="{{route('logout')}}">Logout</a> </div>
 
       </div>

@@ -17,7 +17,7 @@ class Timeline extends Model
      * @var array
      */
     protected $fillable = [
-        'notes','progress','task_updates','user_id',    'task_id'
+        'notes','progress','task_updates','user_id', 'task_id', 'task_connection_id'
         ];
 
   

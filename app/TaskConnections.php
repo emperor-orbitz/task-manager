@@ -5,9 +5,9 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use App\Traits\Uuids;
 
-class Task extends Model
+class TaskConnections extends Model
 {
-    //a
+    //
     use Uuids; //Added for special UUID Trait
 
     /**
@@ -17,7 +17,7 @@ class Task extends Model
      */
     protected $fillable = [
 
-        'title', 'department_id', 'description', 'assigner', 'status', 'start', 'finish', 'notes', 'staff_id'
+     'user_id', 'task_id'
     ];
 
     /**
@@ -33,9 +33,7 @@ class Task extends Model
      * @var array
      */
     
-    protected $table_name = "tasks";
+    protected $table_name = "task_connections";
     public $incrementing = false;
-    protected $casts = [
-        // 'notes' => 'array',
-    ];
+  
 }

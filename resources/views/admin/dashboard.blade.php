@@ -4,12 +4,19 @@
 <script>
   jQuery(function() {
 
-    // $('.ui.sidebar')
-    // .sidebar('toggle');
+    $(".openModal").click(function() {
+      $('.mini.modal').modal('show')
 
-    $('#toggleMenu').click(function() {
-      $('.ui.sidebar')
-        .sidebar('toggle')
+      document.getElementById("deleteBtn").href = `/admin/user/delete/${this.id}`;
+
+    })
+
+    $(".openModalSupervisor").click(function() {
+      if(this.name != 2) return window.location.href = `/admin/user/task/${this.id}`;
+
+      $('.mini.modal.supervisor_modal').modal('show');
+      document.getElementById("deleteBtnSupervisor").href = `/admin/user/task/${this.id}`;
+
     })
   })
 </script>
@@ -42,19 +49,26 @@
         Create Task
       </button>
     </a>
+
+    <!-- <a href="{{route('admin.task.create')}}">
+      <button class="ui grey button">
+        View all Tasks
+      </button>
+    </a> -->
   </div>
-  <h3 class="header"><b>Departments</b></h3>
-  <p class="ui divider"></p>
+
 
 
 
 
 
   <div class="ui container segment" style="border:0px">
+    <h3 class="header"><b>Departments</b></h3>
+    <p class="ui divider"></p>
     <div class="ui grid stackable">
 
 
-      @foreach ($departments as $department)
+      @forelse ($departments as $department)
 
       <div class="four wide column">
         <a href="/admin/department/{{$department->id}}">
@@ -75,8 +89,15 @@
           </div>
         </a>
       </div>
+      @empty
+      <div style="text-align:center; width:100%; padding:20px">
+        <span class="material-icons" style="font-size: 100px;">
+          hourglass_empty
+        </span>
+        <p>There are no departments here</p>
+      </div>
 
-      @endforeach
+      @endforelse
 
 
 
@@ -103,7 +124,7 @@
             <th>First Name</th>
             <th>Last Name</th>
             <th>Role(Level)</th>
-            <th>Delete (Caution)</th>
+            <th>Actions (Caution)</th>
 
           </tr>
         </thead>
@@ -112,14 +133,33 @@
 
           <tr>
             <td>
+              @if (auth()->user()->id === $user->id)
+              ME
+              @else
 
-              <u>{{$user->id}}</u>
+              -
+
+              @endif
             </td>
-            <td>{{$user->email}}</td>
+            <td><a href="{{route('admin.user.get.edit', ['id'=> $user->id])}}">{{$user->email}}</a></td>
             <td>{{$user->first_name}}</td>
             <td>{{$user->last_name}}</td>
             <td>{{$user->role}}</td>
-            <th><a href="/admin/user/delete/{{$user->id}}" style="color: red !important;">Remove User</a></th>
+            <td>
+              @if (auth()->user()->id === $user->id)
+              Unavailable
+              @else
+              <button id="{{$user->id}}" class="openModal ui red button mini ">Delete User</button>
+              <a href="{{route('admin.user.get.edit', ['id'=> $user->id])}}"><button class="ui button mini ">Update Details</button></a>
+              @if ($user->role != 3)
+              <button id="{{$user->id}}" name="{{$user->role}}" class="ui green button mini openModalSupervisor">Tasks/ Assign Task</button> 
+
+              @else
+                -
+              @endif
+              @endif
+
+            </td>
 
           </tr>
 
@@ -135,6 +175,46 @@
 
 
   </div>
+
+  <!--Start Modal-->
+  <div class="mini ui modal">
+    <div class="header">Remove User?</div>
+    <div class="content">
+      <p>Are you sure you want to remove this user?</p>
+    </div>
+    <div class="actions">
+
+      <a id="deleteBtn" href="/admin/user/delete/">
+        <button class="ui red button">Approve</button>
+
+      </a>
+      <div class="ui cancel button">Cancel</div>
+    </div>
+  </div>
+</div>
+
+<!--End Modal-->
+
+
+ <!--Start 'Are you sure' Modal-->
+ <div class="mini ui modal supervisor_modal">
+    <div class="header">Assign Supervisor?</div>
+    <div class="content">
+      <p>Do you want to assign task to a Supervisor? He'll still see it.</p>
+    </div>
+    <div class="actions">
+
+      <a id="deleteBtnSupervisor" href="/admin/user/delete/">
+        <button class="ui green button">Continue</button>
+
+      </a>
+      <div class="ui cancel button">Cancel</div>
+    </div>
+  </div>
+</div>
+
+<!--End 'Are you sure' Modal-->
+
 </div>
 
 

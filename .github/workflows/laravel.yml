@@ -22,6 +22,8 @@ jobs:
           echo APP_DEBUG=false >> .env
           echo DB_USERNAME=augustinecorpora_devmalik >> .env
           echo DB_PASSWORD=malik123!@# >> .env
+        run: |
+          touch .
 
       - name: Deploy to CPanel
         uses: SamKirkland/FTP-Deploy-Action@4.0.0

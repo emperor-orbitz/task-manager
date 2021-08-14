@@ -18,8 +18,9 @@ class Timeline extends Migration
 
         Schema::create('timelines', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->string('task_id')->nullable();
-            $table->string('user_id');
+            $table->string('task_connection_id');
+            // $table->string('task_id')->nullable();
+            // $table->string('user_id');
             $table->json('task_updates');
             $table->integer('progress')->default(0);
             $table->string('notes')->default("No Notes");

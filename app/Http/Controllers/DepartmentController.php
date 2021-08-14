@@ -47,18 +47,20 @@ class DepartmentController extends Controller
     {
         //fetch all department for admin
         $dept = $department->find($id);
-        $members = Connection::where(['department_id' => $id])
+        $members = Connection::where(['connections.department_id' => $id])
             ->select('connections.id AS connection_id', 'users.first_name', 'users.last_name', 'users.email', 'connections.user_id', 'users.role')
             ->join('users', 'users.id', '=', 'connections.user_id')
             ->get();
         // dd($members);
         $non_members = User::select('first_name', 'last_name', 'id', 'email', 'role')
-            ->where('role','<', '2')
+            ->where('role','<=', '2')
             ->orderBy('role', 'desc')
             ->get();
 
-        $tasks = $this->taskList($id);
-        return view("admin.department", ['department' => $dept, 'members' => $members, 'non_members' => $non_members, 'tasks' => $tasks]);
+        // $tasks = $this->taskList($id);
+        return view("admin.department", ['department' => $dept, 'members' => $members, 'non_members' => $non_members
+        // , 'tasks' => $tasks
+    ]);
     }
 
     
@@ -106,6 +108,8 @@ class DepartmentController extends Controller
         $all = Department::all();
         return $all;
     }
+
+
 
 
     public function edit(Request $request, Department $department)

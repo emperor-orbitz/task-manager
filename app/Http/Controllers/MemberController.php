@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Connection;
 use App\Task;
+use App\TaskConnections;
 use App\Timeline;
 
 
@@ -17,9 +18,13 @@ class MemberController extends Controller
     public function dashboard(Request $request)
     {
         $results = Connection::getByUser(auth()->user()->id);
-        // dd($results);
+        $tasks = TaskConnections::where('user_id', auth()->user()->id)
+        ->join('tasks', 'task_connections.task_id', '=', 'tasks.id')
+        ->select('task_connections.id', 'task_connections.task_id', 'tasks.title', 'tasks.description', 'tasks.created_at', 'tasks.progress', 'tasks.assigner', 'tasks.status', 'tasks.start', 'tasks.finish')
+        ->get();
+        // dd($tasks);
         $users = UserController::getAll()->sortByDesc('role');
-        return view('user.dashboard', ['departments' => $results, 'users' => $users]);
+        return view('user.dashboard', ['departments' => $results, 'users' => $users, 'tasks'=>$tasks]);
     }
 
     public function deleteTask(Request $request, $id)
@@ -35,22 +40,27 @@ class MemberController extends Controller
         }
     }
 
-    public function viewTask(Request $request, $task_id)
+    public function viewTask(Request $request, $task_connection_id)
     {
         try {
 
-            $task = Task::where('id', '=', $task_id)->get()->first();
-            $timelines = Timeline::where(['task_id'=>$task->id, 'user_id'=>Auth::user()->id])
-                        ->join('users','timelines.user_id','=','users.id')
-                        ->select('users.id AS user_id', 'timelines.id','users.email','task_updates','users.first_name','task_id', 'task_updates', 'timelines.updated_at', 'progress', 'timelines.notes')
-                        ->orderBy('timelines.created_at', 'desc')
+            $task = TaskConnections::where('task_connections.id', '=', $task_connection_id)
+                                    ->join('tasks', 'tasks.id', '=', 'task_connections.task_id')
+                                    ->select('task_connections.id', 'tasks.created_at', 'task_connections.updated_at', 'title', 'description', 'task_id', 'user_id', 'progress', 'notes')
+                                    ->get()
+                                    ->first();
+            $timelines = Timeline::where(['task_connection_id' => $task_connection_id])
+                            
+                        // ->join('users','timelines.user_id','=','users.id')
+                        // ->select('users.id AS user_id', 'timelines.id','users.email','task_updates','users.first_name','task_id', 'task_updates', 'timelines.updated_at', 'progress', 'timelines.notes')
+                        ->orderBy('created_at', 'desc')
                         ->get();
-
-            // dd($timelines);
+            // dd($timelines, $task);
             return view('user.view_task', ['task' => $task, 'timelines' => $timelines]);
+
         } catch (\Throwable $th) {
-            // dd($th);
-            abort(500);
+            dd($th);
+            // abort(500);
         }
 
         // dd($task, $timeline);

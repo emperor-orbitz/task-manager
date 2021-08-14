@@ -51,71 +51,36 @@
 
   <div class="ui grid stackable" style="margin:50px auto;">
     <div class="four wide column">
+    <h3>Team Members</h3>
 
-      <h3>Team Members</h3>
+    @if (count($members) > 0)
 
-      <div class="ui stacked segments">
-        @foreach ($members as $m )
-       
-        <div class="ui segment">
-          <p>{{$m->first_name}} {{$m->last_name}} (Level: {{$m->role}})</p>
-          @if (auth()->user()->role >= $m->role && auth()->user()->id != $m->user_id )
-          <span><a style="color: red;" href="/admin/user/remove/{{$m->connection_id}}">Remove</a></span>
+<div class="ui stacked segments">
+  @foreach ($members as $m )
 
-          @elseif (auth()->user()->id == $m->user_id)
-          <span>ME</span>
+  <div class="ui segment">
+    <p>{{$m->first_name}} {{$m->last_name}} (Level: {{$m->role}})</p>
+    @if (auth()->user()->role >= $m->role && auth()->user()->id != $m->user_id )
+    <span><a style="color: red;" href="/admin/user/remove/{{$m->connection_id}}">Remove</a></span>
 
-          @else
-          @endif
-          <!-- @if (auth()->user()->id == $m->user_id )
-          <span>Me</span> 
-          @endif -->
-        </div>
-        @endforeach
+    @elseif (auth()->user()->id == $m->user_id)
+    <span>ME</span>
 
+    @else
+    @endif
+
+  </div>
+  @endforeach
+
+</div>
+    @else
+      <div>
+        <p>Seems, there's no one here. Start by adding someone</p>
       </div>
+    @endif
+     
     </div>
     <div class="twelve wide column">
-
-      <h3>Tasks</h3>
-
-      <table class="ui celled table">
-        <thead>
-          <tr>
-            <th>Title</th>
-            <th>Start</th>
-            <th>Finish</th>
-            <th>Progress</th>
-            <th>Created On</th>
-            <th>Action</th>
-
-
-          </tr>
-        </thead>
-        <tbody>
-          @foreach ($tasks as $task )
-          <tr>
-            <td data-label="Title">{{ ucfirst($task->title) }}</td>
-            <td data-label="Start">{{ date("F jS, Y", strtotime($task->start)) }}</td>
-            <td data-label="Finish">{{ date("F jS, Y", strtotime($task->finish)) }}</td>
-            <td data-label="Progress">
-              @if($task->progress =='progress' || $task->progress =='complete')
-              <span style="color:green">{{ucfirst($task->progress)}}</span>
-              @else
-              <span>{{ $task->progress }}</span>
-              @endif
-            </td>
-            <td data-label="Created On">{{ date("F jS, Y", strtotime($task->created_at)) }}</td>
-            <td data-label="delete"><a href="/admin/task/delete/{{$task->id}}" style="color:red"><u>Delete</u></a> | <a href="/admin/task/view/{{$task->id}}"><u>See Timelines</u></a></td>
-
-
-          </tr>
-          @endforeach
-
-
-        </tbody>
-      </table>
-
 
 
     </div>

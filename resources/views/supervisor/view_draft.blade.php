@@ -6,28 +6,32 @@
 <!-- Theme included stylesheets -->
 <link href="//cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
 <link href="//cdn.quilljs.com/1.3.6/quill.bubble.css" rel="stylesheet">
-
+<style>
+img{
+  width:100%;
+}
+</style>
 @endsection
 @section('dashboard_content')
 @include('partials.supervisor.header')
 
 <div style="position:relative;">
 
-<div class="ui text container" style="margin:80px auto;">
- 
+  <div class="ui text container" style="margin:80px auto;">
 
-  <h2 class="header">Draft</h2>
- 
-  <p class="ui divider"></p>
 
-  <div style="display: none;" id="editor-container">
-        <p>Tell Me. What has to be done.</p>
+    <h3 class="header">{{$timeline->notes}}</h3>
+
+    <p class="ui divider"></p>
+
+    <div style="display: none;" id="editor-container">
+      <p>Tell Me. What has to be done.</p>
+    </div>
+    <div id="show"> </div>
+
+
+
   </div>
-    <div id="show">    </div>
-
-
-
-</div>
 
 
 </div>
@@ -39,7 +43,7 @@
       toolbar: []
     },
 
-    
+
     placeholder: 'Compose an epic...',
     theme: 'bubble'
   });
@@ -50,7 +54,7 @@
     // and here your code
 
     var about = document.querySelector('input[name=notes]');
-    quill.setContents(<?php echo $timeline->task_updates;?>);
+    quill.setContents(<?php echo $timeline->task_updates; ?>);
     var html = quill.root.innerHTML;
     document.getElementById('show').innerHTML = html;
     console.log(<?php echo $timeline->task_updates; ?>);

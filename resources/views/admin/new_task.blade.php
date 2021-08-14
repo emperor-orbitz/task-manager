@@ -6,6 +6,31 @@
 <!-- Theme included stylesheets -->
 <link href="//cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
 <link href="//cdn.quilljs.com/1.3.6/quill.bubble.css" rel="stylesheet">
+<script>
+  jQuery(function() {
+    $('.ui.dropdown')
+    .dropdown()
+  ;
+    $("input:radio[name=assignment]").on("change", function() {
+      if ($(this).is(":checked")) {
+        // do stuff
+        if (this.id === 'department') {
+          $("#department_select").show()
+          $("#staff_select").hide()
+
+        } else {
+          $("#staff_select").show()
+          $("#department_select").hide()
+
+        }
+      }
+    }).change()
+
+
+
+  })
+</script>
+
 
 @endsection
 @section('dashboard_content')
@@ -25,6 +50,7 @@
   <form class="ui form task" method="POST" action="{{route('admin.task.store')}}">
     @csrf
     <div class="ui error message"></div>
+    <div class="ui segment">
 
     <div class="field">
       <div class="two fields">
@@ -42,16 +68,53 @@
     </div>
 
 
+      <!-- <div class="field">
 
-    <div class="field">
-      <label>Assign Department</label>
-      <select name="department_id" class="ui fluid dropdown">
-        @foreach ($departments as $department )
-        <option value="{{$department->id}}">{{$department->name}}</option>
-        @endforeach
+        <div class="ui form">
+          <div class="grouped fields">
+            <label>Who gets this task?</label>
+            <div class="field">
+              <div class="ui radio checkbox">
+                <input type="radio" id="department" name="assignment" checked="checked">
+                <label>An whole department (Seen by Everyone in the department)</label>
+              </div>
+            </div>
+            <div class="field">
+              <div class="ui radio checkbox">
+                <input type="radio" id="staff" name="assignment">
+                <label>Select Staffs</label>
+              </div>
+            </div>
 
-      </select>
-    </div>
+          </div>
+        </div>
+      </div> -->
+
+      <!-- <div class="field" id="department_select">
+        <label>Assign Department </label>
+        <select name="department_id" class="ui fluid dropdown">
+          <option value="">Select Staffs</option>
+          @foreach ($departments as $department )
+          <option value="{{$department->id}}">{{$department->name}}</option>
+          @endforeach
+
+        </select>
+      </div> -->
+      <!-- <div class="field" id="staff_select">
+        <label>Assign to Staffs </label>
+        <select name="staff_id[]" class="ui fluid search dropdown" multiple="multiple">
+          <option value="">Select Staff(s)</option>
+          @foreach ($staffs as $staff )
+          <option value="{{$staff->id}}">{{$staff->first_name}}</option>
+          @endforeach
+
+        </select>
+
+  
+      </div> -->
+
+
+
 
     <div class="field">
       <label>Start Date</label>
@@ -73,7 +136,8 @@
     </div>
 
     <div class="ui submit button blue submit_register" id="submitBtn">Create Task</div>
-    <!-- <span><a href="{{route('login')}}">Login</span></a>  -->
+    </div>
+
   </form>
 </div>
 

@@ -39,7 +39,7 @@
       </button>
     </a>
   </div>
-  <h3 class="header"><b>Your Department(s)</b></h3>
+  <h3 class="header"><b>Department(s) you are part of</b></h3>
   <p class="ui divider"></p>
 
 
@@ -90,7 +90,7 @@
 
   <div class="ui container segment" style="min-height:300px;border:0px; ">
     <div class="ui grid stackable">
-
+<!-- 
       <table class="ui selectable celled table">
         <thead>
           <tr>
@@ -99,7 +99,7 @@
             <th>First Name</th>
             <th>Last Name</th>
             <th>Role(Level)</th>
-            <!-- <th>Delete (Caution)</th> -->
+            <th>Delete (Caution)</th>
 
           </tr>
         </thead>
@@ -115,15 +115,60 @@
             <td>{{$user->first_name}}</td>
             <td>{{$user->last_name}}</td>
             <td>{{$user->role}}</td>
-            <!-- <th><a href="/admin/user/delete/{{$user->id}}" style="color: red !important;">Remove User</a></th> -->
+            <th><a href="/admin/user/delete/{{$user->id}}" style="color: red !important;">Remove User</a></th>
+
+          </tr>
+
+          @endforeach
+        </tbody>
+      </table> -->
+
+
+      <table class="ui selectable celled table">
+        <thead>
+          <tr>
+            <th>id</th>
+            <th>Email</th>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Role(Level)</th>
+            <th>Actions (Caution)</th>
+
+          </tr>
+        </thead>
+        <tbody>
+          @foreach ($users as $user)
+
+          <tr>
+            <td>
+              @if (auth()->user()->id === $user->id)
+              <b>ME</b>
+              @else
+
+              -
+
+              @endif
+            </td>
+            <td><a href="{{route('admin.user.get.edit', ['id'=> $user->id])}}">{{$user->email}}</a></td>
+            <td>{{$user->first_name}}</td>
+            <td>{{$user->last_name}}</td>
+            <td>{{$user->role}}</td>
+            <td>
+              @if (auth()->user()->id === $user->id || $user->role >= auth()->user()->role )
+              Unavailable
+              @else
+              <!-- <a href="{{route('admin.user.get.edit', ['id'=> $user->id])}}"><button class="ui button mini ">Update Details</button></a> -->
+              <a href="/supervisor/user/task/{{$user->id}}"><button class="ui green button mini openModalSupervisor">Tasks/ Assign Task</button> </a>
+
+              @endif
+
+            </td>
 
           </tr>
 
           @endforeach
         </tbody>
       </table>
-
-
 
     </div>
 

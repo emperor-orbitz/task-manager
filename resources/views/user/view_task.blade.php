@@ -1,56 +1,3 @@
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 @extends('layouts.main')
 @section('title', 'Dashboard | Timelines -> Tasks')
 @section('script')
@@ -66,81 +13,81 @@
 
 <div style="position:relative;">
 
-<div class="ui container" style="margin:80px auto;">
-  @if (Session::has('message'))
-  <div class="ui {{Session::get('status')}} message">
-    {{Session::get('message')}}
-  </div>
-  @endif
-
-
-  <h2 class="header">{{$task->title}} (Status: {{ucfirst($task->progress)}})</h2>
-  <p><b>About this Task:</b> {{$task->description}}</p>
-  <p><b>From</b>: {{date("F jS, Y", strtotime($task->start))}} to  {{date("F jS, Y", strtotime($task->end))}}</p>
-
-  <p class="ui divider"></p>
-  <form class="ui form task" method="POST" action="/user/task/edit">
-    @csrf
-    <div class="ui error message"></div>
-    <input type="hidden" name="task_id" value="{{$task->id}}">
-
- 
-
-    <input type="hidden" name="task_updates" placeholder="Finish Date">
-    <div class="field">
-      <label>Progress Summmary</label>
-      <textarea name="notes" id="" cols="30" rows="5"></textarea>
+  <div class="ui container" style="margin:80px auto;">
+    @if (Session::has('message'))
+    <div class="ui {{Session::get('status')}} message">
+      {{Session::get('message')}}
     </div>
-    
-    <div class="field">
-      <label>Add Progress in Details</label>
-      <div id="editor-container">
-        <p>Any Resultss?</p>
+    @endif
+
+
+    <h2 class="header">{{$task->title}} (Status: {{ucfirst($task->progress)}})</h2>
+    <p><b>About this Task:</b> {{$task->description}}</p>
+    <p><b>From</b>: {{date("F jS, Y", strtotime($task->start))}} to {{date("F jS, Y", strtotime($task->end))}}</p>
+
+    <p class="ui divider"></p>
+    <form class="ui form task" method="POST" action="/user/task/edit">
+      @csrf
+      <div class="ui error message"></div>
+      <input type="hidden" name="task_connection_id" value="{{$task->id}}">
+
+
+
+      <input type="hidden" name="task_updates" placeholder="Finish Date">
+      <div class="field">
+        <label>Progress Summmary</label>
+        <textarea name="notes" id="" cols="30" rows="5"></textarea>
       </div>
-    </div>
 
-    <div class="ui submit button blue submit_register" id="submitBtn">Add Progress</div>
-    <!-- <span><a href="{{route('login')}}">Login</span></a>  -->
-  </form>
+      <div class="field">
+        <label>Add Progress in Details</label>
+        <div id="editor-container">
+          <p>Any Resultss?</p>
+        </div>
+      </div>
+
+      <div class="ui submit button blue submit_register" id="submitBtn">Add Progress</div>
+      <!-- <span><a href="{{route('login')}}">Login</span></a>  -->
+    </form>
 
 
     <div style="margin:80px auto; padding-bottom: 50px;">
-    <h2 class="header">Project Timeline Activities</h2>
-    <p class="ui divider"></p>
-    
-    <table class="ui single line table">
-  <thead>
-    <tr>
-        <th>No.</th>
-      <th>User</th>
-      <th>Notes</th>
-      <th>See Details/Draft</th>
-      <th>Last Updated</th>
-    </tr>
-  </thead>
-  <tbody>
-    @forelse ($timelines as $timeline)
-    <tr>
-    <td> {{$loop->iteration}}</td>
+      <h2 class="header">Your Timeline Activities for this Task</h2>
+      <p class="ui divider"></p>
+      @if (count($timelines)> 0)
+      <table class="ui single line table">
+        <thead>
+          <tr>
+            <th>No.</th>
+            <th>Updated on</th>
+            <th>Notes</th>
+            <th>See Details/Draft</th>
+          </tr>
+        </thead>
+        <tbody>
+          @foreach ($timelines as $timeline)
+          <tr>
+            <td> {{$loop->iteration}}</td>
 
-      <td>  {{$timeline->first_name}} {{$timeline->last_name}}</td>
-      <td>  {{$timeline->notes}}</td>
-      <td><a href="/user/task/draft/{{$timeline->id}}"> See Details</a></td>
-      <td>{{date("F jS", strtotime($timeline->updated_at))}} </td>
-    </tr>
-
-    @empty
-    <div class="ui message">
-  <div class="header">
-    Attention
-  </div>
-  <p>You have not made any Progress to this Task!</p>
-</div>
-    @endforelse
+            <td>{{date("F jS", strtotime($timeline->updated_at))}} </td>
+            <td> {{$timeline->notes}}</td>
+            <td><a href="/user/task/draft/{{$timeline->id}}"> See Details</a></td>
+          </tr>
 
 
-    </tbody>
-</table>
+          @endforeach
+
+        </tbody>
+      </table>
+
+      @else
+      <div class="ui message">
+        <div class="header">
+          Attention
+        </div>
+        <p>You have not made any Progress to this Task!</p>
+      </div>
+      @endif
 
 
 
@@ -151,7 +98,7 @@
 
     </div>
 
-</div>
+  </div>
 
 
 </div>
@@ -171,7 +118,7 @@
       ]
     },
 
-    
+
     placeholder: 'Compose an epic...',
     theme: 'snow'
   });
@@ -183,13 +130,13 @@
     // $('.ui.accordion').accordion();
 
     // var about = document.querySelector('input[name=notes]');
-    // about.value = quill.setContents(<?php echo $task->notes;?>);
+    // about.value = quill.setContents(<?php echo $task->notes; ?>);
 
     console.log(<?php echo $task->notes; ?>);
     $('.ui.form.task').form({
       on: 'blur',
       fields: {
-      
+
         start: {
           identifier: 'start',
           rules: [{

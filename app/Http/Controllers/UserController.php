@@ -84,7 +84,7 @@ class UserController extends Controller
 
     public static function getAll()
     {
-        $all = User::all();
+        $all = User::orderBy('role', 'desc')->get();
         return $all;
     }
 }

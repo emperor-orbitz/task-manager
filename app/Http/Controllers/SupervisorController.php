@@ -7,6 +7,7 @@ use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\UserController;
 use App\Connection;
 use App\Task;
+use App\TaskConnections;
 use App\User;
 use App\Timeline;
 use Facade\FlareClient\Time\Time;
@@ -21,14 +22,31 @@ class SupervisorController extends Controller
     {
         $results = Connection::getByUser(auth()->user()->id);
         // dd($results);
+
+        
+            // $departments = DepartmentController::getAll();
+       
         $users = UserController::getAll()->sortByDesc('role');
         return view('supervisor.dashboard', ['departments' => $results, 'users' => $users]);
     }
 
+    // public function deleteTask(Request $request, $id)
+    // {
+    //     //delete a task with its id
+    //     $delete = Task::where('id', '=', $id)->delete();
+    //     if ($delete) {
+    //         self::setStatus($request, ['status' => 'success', 'message' => 'Task Deletion Successful']);
+    //         return redirect()->back();
+    //     } else {
+    //         self::setStatus($request, ['status' => 'error', 'message' => 'Oops! I was unable to help you delete this']);
+    //         return redirect()->back();
+    //     }
+    // }
+
     public function deleteTask(Request $request, $id)
     {
         //delete a task with its id
-        $delete = Task::where('id', '=', $id)->delete();
+        $delete = TaskConnections::where('id', '=', $id)->delete();
         if ($delete) {
             self::setStatus($request, ['status' => 'success', 'message' => 'Task Deletion Successful']);
             return redirect()->back();
@@ -51,28 +69,58 @@ class SupervisorController extends Controller
         }
     }
 
-    public function viewTask(Request $request, $task_id)
+    // public function viewTask(Request $request, $task_id)
+    // {
+    //     try {
+
+    //         $task = Task::where('id', '=', $task_id)->get()->first();
+    //         $timelines = Timeline::where('task_id', $task->id)
+    //                     ->join('users','timelines.user_id','=','users.id')
+    //                     ->select('users.id AS user_id', 'timelines.id','users.email','task_updates','users.first_name','task_id', 'task_updates', 'timelines.updated_at', 'progress', 'timelines.notes')
+    //                     ->orderBy('timelines.created_at', 'desc')
+    //                     ->get();
+
+    //         // dd($timelines);
+    //         return view('supervisor.view_task', ['task' => $task, 'timelines' => $timelines]);
+    //     } catch (\Throwable $th) {
+    //         // dd($th);
+    //         abort(500);
+    //     }
+
+    //     // dd($task, $timeline);
+
+    // }
+
+
+    
+    public function viewTask(Request $request, $task_connection_id)
     {
         try {
 
-            $task = Task::where('id', '=', $task_id)->get()->first();
-            $timelines = Timeline::where('task_id', $task->id)
-                        ->join('users','timelines.user_id','=','users.id')
-                        ->select('users.id AS user_id', 'timelines.id','users.email','task_updates','users.first_name','task_id', 'task_updates', 'timelines.updated_at', 'progress', 'timelines.notes')
-                        ->orderBy('timelines.created_at', 'desc')
-                        ->get();
+            $task = TaskConnections::where('task_connections.id', '=', $task_connection_id)
+                                    ->join('tasks', 'task_connections.task_id' ,'=', 'tasks.id')
+                                    
+                                    ->select('tasks.id', 'tasks.title', 'tasks.description', 'tasks.created_at', 'tasks.updated_at')
+                                    ->get()->first();
 
-            // dd($timelines);
-            return view('supervisor.view_task', ['task' => $task, 'timelines' => $timelines]);
+            $timelines = Timeline::where(['task_connection_id' => $task_connection_id])
+                // ->join('users', 'timelines.user_id', '=', 'users.id')
+
+                // ->select('users.id AS user_id', 'timelines.id', 'users.email', 'task_updates', 'users.first_name', 'task_id', 'task_updates', 'timelines.updated_at', 'progress', 'timelines.notes')
+                ->orderBy('created_at', 'desc')
+                ->get();
+            // dd($task_connection_id,$task, $timelines);
+            return view('admin.view_task', ['task' => $task, 'timelines' => $timelines]);
         } catch (\Throwable $th) {
-            // dd($th);
-            abort(500);
+            // abort(500);
+            throw $th;
         }
 
         // dd($task, $timeline);
 
     }
 
+    
 
     public function createUser(Request $request)
     {
